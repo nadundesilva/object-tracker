@@ -42,7 +42,7 @@ setuptools.setup(
         "console_scripts": ["object-tracker=tracker:main.cli"],
     },
     setup_requires=[],
-    install_requires=["typer ~= 0.4.0"],
+    install_requires=["typer ~= 0.4.0", "opencv-contrib-python ~= 4.5.4.58"],
     tests_require=[],
     extras_require={
         "dev": ["black ~= 20.8b1"],

@@ -18,4 +18,22 @@ import cv2 as cv
 
 
 def cli():
-    typer.echo("Welcome to Object Tracker " + cv.__version__)
+    cap = cv.VideoCapture(0)
+    if not cap.isOpened():
+        typer.echo("Unable to open camera")
+        typer.Exit(1)
+
+    while True:
+        frame_read_success, frame = cap.read()
+        if not frame_read_success:
+            typer.echo("Unable to read frame from camera")
+            break
+
+        frame = cv.flip(frame, 1)
+        cv.imshow("frame", frame)
+
+        if cv.waitKey(1) == ord("q"):
+            break
+
+    cap.release()
+    cv.destroyAllWindows()

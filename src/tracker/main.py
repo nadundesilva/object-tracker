@@ -14,26 +14,42 @@ limitations under the License.
 """
 
 import typer
-import cv2 as cv
+import cv2
 
 
 def cli():
-    cap = cv.VideoCapture(0)
+    cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         typer.echo("Unable to open camera")
         typer.Exit(1)
 
+    ok, frame = cap.read()
+    if not ok:
+        typer.echo("Unable to read initial frame from camera")
+        typer.Exit(1)
+
+    height = frame.shape[1]
+    width = frame.shape[1]
+    typer.echo(
+        "Started tracking video of size ({height}, {width})".format(
+            height=height, width=width
+        )
+    )
+
     while True:
-        frame_read_success, frame = cap.read()
-        if not frame_read_success:
+        ok, frame = cap.read()
+        if not ok:
             typer.echo("Unable to read frame from camera")
             break
 
-        frame = cv.flip(frame, 1)
-        cv.imshow("frame", frame)
+        frame = cv2.flip(frame, 1)
+        x1 = int(height / 3)
+        y1 = int(width / 3)
+        cv2.rectangle(frame, (x1, y1), (x1 * 2, y1 * 2), (0, 255, 0), 2)
+        cv2.imshow("Frame", frame)
 
-        if cv.waitKey(1) == ord("q"):
+        if cv2.waitKey(1) == ord("q"):
             break
 
     cap.release()
-    cv.destroyAllWindows()
+    cv2.destroyAllWindows()
